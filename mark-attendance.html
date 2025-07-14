@@ -1,0 +1,60 @@
+<!-- mark-attendance.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mark Attendance</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+</head>
+<body class="light-theme">
+  <div class="page-container">
+    <h2>📋 Mark Attendance</h2>
+
+    <!-- ✅ Date Input Field -->
+    <div class="form-group">
+      <label for="attendanceDate">Select Date:</label>
+      <input type="date" id="attendanceDate" />
+    </div>
+
+    <!-- ✅ Attendance Filter -->
+    <div class="form-group">
+      <select id="course">
+        <option disabled selected>Select Course</option>
+        <option>BCA</option>
+        <option>BSc</option>
+        <option>BCom</option>
+      </select>
+
+      <select id="semester">
+        <option disabled selected>Select Semester</option>
+        <option>Sem 1</option>
+        <option>Sem 2</option>
+        <option>Sem 3</option>
+        <option>Sem 4</option>
+        <option>Sem 5</option>
+        <option>Sem 6</option>
+      </select>
+
+      <input type="text" id="subject" placeholder="Subject" />
+      <button onclick="loadStudents()">📥 Load Students</button>
+    </div>
+
+    <!-- ✅ Attendance Cards Area -->
+    <div id="card-area"></div>
+    <p id="status" class="status"></p>
+  </div>
+
+  <!-- ✅ Firebase & Logic Scripts -->
+  <script type="module">
+    // ✅ Default Date Set on Page Load
+    const dateField = document.getElementById("attendanceDate");
+    const today = new Date().toISOString().split("T")[0];
+    dateField.value = today;
+  </script>
+
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

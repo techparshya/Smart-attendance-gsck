@@ -1,0 +1,56 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Smart Attendance GSCK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.png" />
+  <script type="module" src="firebase-config.js"></script>
+  <script src="theme.js"></script>
+
+</head>
+<body class="light-theme">
+
+  <div class="main-container">
+    <header>
+      <h2>Welcome, Teacher</h2>
+    </header>
+
+    <!-- 🔀 Dynamic Content Area -->
+    <iframe id="pageFrame" src="mark-attendance.html" frameborder="0"></iframe>
+
+    <!-- 📱 Bottom Tab Navigation -->
+    <nav class="bottom-nav">
+      <button onclick="navigate('mark-attendance.html')">
+        <img src="assets/icons/mark.svg" alt="Mark" />
+        <span>Mark</span>
+      </button>
+      <button onclick="navigate('add-student.html')">
+        <img src="assets/icons/add.svg" alt="Add/Remove" />
+        <span>Students</span>
+      </button>
+      <button onclick="navigate('view-history.html')">
+        <img src="assets/icons/history.svg" alt="History" />
+        <span>History</span>
+      </button>
+      <button onclick="navigate('download.html')">
+        <img src="assets/icons/download.svg" alt="Download" />
+        <span>Export</span>
+      </button>
+      <button onclick="toggleTheme()">
+        <img src="assets/icons/theme.svg" alt="Theme" />
+        <span>Theme</span>
+      </button>
+      <button onclick="logout()">
+        <img src="assets/icons/logout.svg" alt="Logout" />
+        <span>Logout</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="script.js" type="module"></script>
+  <script src="theme.js"></script>
+</body>
+</html>

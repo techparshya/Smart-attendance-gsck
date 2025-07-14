@@ -1,0 +1,103 @@
+<!-- view-history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance History</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+</head>
+<body class="light-theme">
+  <div class="page-container">
+    <h2>View Student Attendance on a Date</h2>
+
+    <div class="form-group">
+      <label for="historyDate">Select Date:</label>
+      <input type="date" id="historyDate" />
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="roll" placeholder="Enter Roll No" />
+      <select id="course">
+        <option disabled selected>Select Course</option>
+        <option>BCA</option>
+        <option>BSc</option>
+        <option>BCom</option>
+      </select>
+      <select id="semester">
+        <option disabled selected>Select Semester</option>
+        <option>Sem 1</option>
+        <option>Sem 2</option>
+        <option>Sem 3</option>
+        <option>Sem 4</option>
+        <option>Sem 5</option>
+        <option>Sem 6</option>
+      </select>
+      <input type="text" id="subject" placeholder="Subject" />
+      <button onclick="viewHistory()">🔍 View History</button>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module">
+    import { app } from './firebase-config.js';
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+
+    window.viewHistory = async function () {
+      const roll = document.getElementById("roll").value.trim();
+      const course = document.getElementById("course").value.trim();
+      const semester = document.getElementById("semester").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const date = document.getElementById("historyDate").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!roll || !course || !semester || !subject || !date) {
+        resultDiv.innerHTML = "❌ Please fill all fields.";
+        return;
+      }
+
+      resultDiv.innerHTML = "⏳ Checking attendance...";
+
+      const safeSubject = subject.replace(/\s+/g, "_");
+      const safeCourse = course.replace(/\s+/g, "_");
+      const safeSemester = semester.replace(/\s+/g, "_");
+      const path = `attendance/${date}/${safeSubject}_${safeCourse}_${safeSemester}`;
+
+      try {
+        const studentRef = doc(db, path, roll);
+        const docSnap = await getDoc(studentRef);
+
+        if (!docSnap.exists()) {
+          resultDiv.innerHTML = `❌ No attendance found for Roll No <b>${roll}</b> on <b>${date}</b>`;
+          return;
+        }
+
+        const data = docSnap.data();
+        const status = data.status === "P" ? "✅ Present" : "❌ Absent";
+
+        resultDiv.innerHTML = `
+          <h3>Attendance Result</h3>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Roll No:</strong> ${data.roll}</p>
+          <p><strong>Course:</strong> ${data.course}</p>
+          <p><strong>Semester:</strong> ${data.semester}</p>
+          <p><strong>Subject:</strong> ${data.subject}</p>
+          <p><strong>Date:</strong> ${data.date}</p>
+          <p><strong>Status:</strong> ${status}</p>
+        `;
+      } catch (err) {
+        resultDiv.innerHTML = "❌ Error checking attendance: " + err.message;
+      }
+    };
+  </script>
+</body>
+</html>

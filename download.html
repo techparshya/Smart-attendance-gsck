@@ -1,0 +1,98 @@
+<!-- download.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Download Attendance</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="theme.js"></script>
+</head>
+<body class="light-theme">
+  <div class="page-container">
+    <h2>Download Attendance Excel</h2>
+
+    <div class="form-group">
+      <select id="course">
+        <option disabled selected>Select Course</option>
+        <option>BCA</option>
+        <option>BSc</option>
+        <option>BCom</option>
+      </select>
+
+      <select id="semester">
+        <option disabled selected>Select Semester</option>
+        <option>Sem 1</option>
+        <option>Sem 2</option>
+        <option>Sem 3</option>
+        <option>Sem 4</option>
+        <option>Sem 5</option>
+        <option>Sem 6</option>
+      </select>
+
+      <!-- 🔁 Changed from dropdown to text input -->
+      <input type="text" id="subject" placeholder="Enter Subject (e.g. WEB, JAVA)" />
+
+      <input type="date" id="downloadDate" />
+      <button onclick="downloadAttendance()">⬇️ Download Excel</button>
+    </div>
+
+    <div id="download-status" class="status"></div>
+  </div>
+
+  <script type="module">
+    import { app } from './firebase-config.js';
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+
+    window.downloadAttendance = async function () {
+      const course = document.getElementById("course").value.trim().toUpperCase();
+      const semester = document.getElementById("semester").value.trim().replace(/\s+/g, "_");
+      const subject = document.getElementById("subject").value.trim().toUpperCase();
+      const date = document.getElementById("downloadDate")?.value;
+
+      if (!course || !semester || !subject || !date) {
+        alert("Please select course, semester, subject and date.");
+        return;
+      }
+
+      const path = `${subject}_${course}_${semester}`;
+      const subCollection = collection(db, `attendance/${date}/${path}`);
+      const snapshot = await getDocs(subCollection);
+
+      const attendanceData = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        attendanceData.push({
+          Date: date,
+          Name: data.name,
+          Roll: data.roll,
+          Contact: data.contact,
+          Status: data.status === 'P' ? 'Present' : data.status === 'A' ? 'Absent' : data.status,
+          Course: data.course,
+          Semester: data.semester,
+          Subject: data.subject
+        });
+      });
+
+      if (attendanceData.length === 0) {
+        document.getElementById("download-status").innerText = "❌ No attendance records found.";
+        return;
+      }
+
+      const ws = XLSX.utils.json_to_sheet(attendanceData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+
+      XLSX.writeFile(wb, `Attendance_${subject}_${course}_${semester}_${date}.xlsx`);
+      document.getElementById("download-status").innerText = "✅ Excel downloaded!";
+    };
+  </script>
+</body>
+</html>

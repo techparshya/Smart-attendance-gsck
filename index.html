@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Login | Smart Attendance GSCK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.png" />
+  <script type="module" src="firebase-config.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
+<link rel="manifest" href="manifest.json">
+
+</head>
+<body class="light-theme">
+  <div class="login-container">
+    <h2>Smart Attendance GSCK</h2>
+
+    <div class="tab-buttons">
+      <button id="loginTab" class="active" onclick="toggleTab('login')">Login</button>
+      <button id="registerTab" onclick="toggleTab('register')">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm" class="form active">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" class="form">
+      <input type="email" id="registerEmail" placeholder="Email" required />
+      <input type="password" id="registerPassword" placeholder="Password" required />
+      <button onclick="register()">Register</button>
+    </div>
+
+    <p class="credit">Created by <strong>Prashant R. Ratnakar</strong></p>
+  </div>
+
+  <!-- Scripts should be at the end for DOM readiness -->
+  <script src="theme.js"></script>
+  <script src="script.js" type="module"></script>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('Service Worker Registered'))
+      .catch(err => console.log('SW registration failed:', err));
+  }
+</script>
+
+
+</body>
+</html>
