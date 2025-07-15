@@ -1,20 +1,14 @@
+// service-worker.js
+
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open('static').then(cache => {
-      return cache.addAll([
-        './',
-        './index.html',
-        './style.css',
-        './script.js'
-      ]);
-    })
-  );
+  self.skipWaiting(); // Immediately activate this version
 });
 
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim()); // Control existing clients
+});
+
+// For development: always fetch from network (no cache)
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(res => {
-      return res || fetch(event.request);
-    })
-  );
+  event.respondWith(fetch(event.request));
 });
