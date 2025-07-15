@@ -1,4 +1,5 @@
 #📱 Smart Attendance GSCK – Easy Class Attendance App 
+
 🎓✅ Take your class attendance 📋 to the next level with Smart Attendance GSCK – a modern, simple, and powerful attendance tracking app designed especially for teachers and colleges! 🏫✨#
 
 🌟 Key Features: ✅ Swipe to Mark Attendance ➡️ Swipe Right = Present 🟢 ⬅️ Swipe Left = Absent 🔴
